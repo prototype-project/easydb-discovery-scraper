@@ -77,11 +77,11 @@ def run():
     load_balancers_notified_correctly = False
     while True:
         try:
+            time.sleep(SLEEP_TIME_SECONDS)
             current_backends = read_services()
             if current_backends != previous_backends or not load_balancers_notified_correctly:
                 previous_backends = current_backends
                 load_balancers_notified_correctly = send_instances_to_load_balancer(current_backends)
-            time.sleep(SLEEP_TIME_SECONDS)
             logger.info("Found active backends: [%s]" % ", ".join(current_backends))
         except Exception as e:
             logger.exception("Failed to perform discovery scrapping %s", e)
