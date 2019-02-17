@@ -2,12 +2,31 @@ import json
 import time
 import requests
 import logging
+import os
 
 from kazoo.client import KazooClient
 
-HOSTS = '127.0.0.1:2181'
+ZOOKEEPER_HOSTS = '127.0.0.1:2181'
 SERVICE_NAME = 'Easydb'
-LOAD_BALANCERS = ['127.0.0.1:8001']
+LOAD_BALANCERS_STR = '127.0.0.1:8001'
+
+try:
+    ZOOKEEPER_HOSTS = os.environ['ZOOKEEPER_HOSTS']
+except:
+    pass
+
+try:
+    SERVICE_NAME = os.environ['SERVICE_NAME']
+except:
+    pass
+
+try:
+    LOAD_BALANCERS_STR = os.environ['LOAD_BALANCERS']
+except:
+    pass
+
+LOAD_BALANCERS = ";".join(LOAD_BALANCERS_STR)
+
 SLEEP_TIME_SECONDS = 1
 
 logger = logging.getLogger(__name__)
@@ -15,7 +34,7 @@ logger.setLevel(logging.INFO)
 FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
 logging.basicConfig(level=logging.INFO, format=FORMAT)
 
-zk = KazooClient(hosts=HOSTS, read_only=True)
+zk = KazooClient(hosts=ZOOKEEPER_HOSTS, read_only=True)
 zk.start()
 
 def read_services():
