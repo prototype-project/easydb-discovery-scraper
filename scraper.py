@@ -60,6 +60,7 @@ def parse_instance(instance_data: bytes):
 
 def send_instances_to_load_balancer(services):
     data = ""
+    success = True
     for s in services:
         data += "server %s;" % s
 
@@ -67,15 +68,19 @@ def send_instances_to_load_balancer(services):
         response = requests.post("http://%s/upstream/backend" % load_balancer, data)
         if response.status_code >= 300:
             logger.warning("Failed to pass services ips to load balancer %s. Status code %s", load_balancer, response.status_code)
+            success = False
+
+    return success
 
 def run():
     previous_backends = []
+    load_balancers_notified_correctly = False
     while True:
         try:
             current_backends = read_services()
-            if current_backends != previous_backends:
+            if current_backends != previous_backends or not load_balancers_notified_correctly:
                 previous_backends = current_backends
-                send_instances_to_load_balancer(current_backends)
+                load_balancers_notified_correctly = send_instances_to_load_balancer(current_backends)
             time.sleep(SLEEP_TIME_SECONDS)
             logger.info("Found active backends: [%s]" % ", ".join(current_backends))
         except Exception as e:
