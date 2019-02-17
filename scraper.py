@@ -8,7 +8,7 @@ from kazoo.client import KazooClient
 
 ZOOKEEPER_HOSTS = '127.0.0.1:2181'
 SERVICE_NAME = 'Easydb'
-LOAD_BALANCERS_STR = '127.0.0.1:8001'
+LOAD_BALANCERS_STR = '127.0.0.1:8081'
 
 try:
     ZOOKEEPER_HOSTS = os.environ['ZOOKEEPER_HOSTS']
@@ -25,7 +25,7 @@ try:
 except:
     pass
 
-LOAD_BALANCERS = ";".join(LOAD_BALANCERS_STR)
+LOAD_BALANCERS = LOAD_BALANCERS_STR.split(";")
 
 SLEEP_TIME_SECONDS = 1
 
