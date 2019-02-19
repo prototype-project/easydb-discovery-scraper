@@ -82,7 +82,7 @@ def run():
             if current_backends != previous_backends or not load_balancers_notified_correctly:
                 previous_backends = current_backends
                 load_balancers_notified_correctly = send_instances_to_load_balancer(current_backends)
-            logger.info("Found active backends: [%s]" % ", ".join(current_backends))
+                logger.info("Found active backends: [%s]" % ", ".join(current_backends))
         except Exception as e:
             logger.exception("Failed to perform discovery scrapping %s", e)
 
