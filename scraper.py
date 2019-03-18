@@ -70,7 +70,8 @@ def parse_instance(instance_data: bytes):
     return "%s:%s" % (data_as_dict['address'], data_as_dict['port'])
 
 def notify_listeners(services):
-    return all([send_instances_to_load_balancer(services), update_prometheus_targets(services)])
+    send_instances_to_load_balancer(services)
+    update_prometheus_targets(services)
 
 def send_instances_to_load_balancer(services):
     data = ""
@@ -88,8 +89,7 @@ def update_prometheus_targets(services):
         "labels": {
             "alias": "Easydb"
         },
-        "targets": [
-        ]
+        "targets": []
     }
     for s in services:
         data['targets'].append(s)
