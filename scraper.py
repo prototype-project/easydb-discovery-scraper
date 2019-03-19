@@ -95,7 +95,7 @@ def update_prometheus_targets(services):
         data['targets'].append(s)
 
     with open(PROMETHEUS_TARGETS_FILE_PATH, 'w') as outfile:
-        json.dump(data, outfile)
+        json.dump([data], outfile)
 
 def run():
     previous_backends = []
